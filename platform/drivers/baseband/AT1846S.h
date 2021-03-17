@@ -183,4 +183,6 @@ void AT1846S_setPaDrive(const uint8_t value);
  */
 void AT1846S_setAnalogSqlThresh(const uint8_t thresh);
 
+uint16_t AT1846S_readRegister(uint8_t reg);
+
 #endif /* AT1846S_H */

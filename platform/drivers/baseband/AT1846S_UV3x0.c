@@ -303,3 +303,8 @@ void AT1846S_setAnalogSqlThresh(const uint8_t thresh)
 {
     i2c_writeReg16(0x49, ((uint16_t) thresh));
 }
+
+uint16_t AT1846S_readRegister(uint8_t reg)
+{
+    return i2c_readReg16(reg);
+}
