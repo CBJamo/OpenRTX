@@ -39,22 +39,22 @@
 int main(void)
 {
     platform_init();
-   
+
     // Wait for 5 seconds
     delayMs(5000);
 
-    printf("AT1846S init\r\n");
+//     printf("AT1846S init\r\n");
     AT1846S_init();
-    
-    printf("AT1846S registers\r\n");
-    uint addr = 0x00;
-    do
-    {
-        uint16_t value = AT1846S_readRegister(addr);
-        printf("reg 0x%02x: 0x%04x\r\n", addr, value);
-        addr++;
-    }
-    while(addr <= 0xFF);
-    
+
+//     printf("AT1846S registers\r\n");
+//     uint addr = 0x00;
+//     do
+//     {
+//         uint16_t value = AT1846S_readRegister(addr);
+//         printf("reg 0x%02x: 0x%04x\r\n", addr, value);
+//         addr++;
+//     }
+//     while(addr <= 0xFF);
+
     while(1);
 }

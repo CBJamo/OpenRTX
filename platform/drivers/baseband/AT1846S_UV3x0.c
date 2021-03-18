@@ -32,6 +32,8 @@
 #include "interfaces.h"
 #include "AT1846S.h"
 
+#include <stdio.h>
+
 void _maskSetRegister(uint8_t reg, uint16_t mask, uint16_t value)
 {
     uint16_t regVal = i2c_readReg16(reg);
@@ -53,62 +55,130 @@ static inline void _reloadConfig()
     i2c_writeReg16(0x30, reg);             /* Restore op. status     */
 }
 
+uint16_t oldRegs[256] = {0};
+
+void _writeCheckRegisters(uint8_t reg, uint16_t val)
+{
+    iprintf("\r\n Setting reg 0x%02x to 0x%04x\r\n", reg, val);
+    i2c_writeReg16(reg, val);
+    for(uint8_t i = 0; i < 255; i++)
+    {
+        uint16_t reg = i2c_readReg16(i);
+        if(reg != oldRegs[i])
+        {
+            iprintf("  Register 0x%02x changed from 0x%04x to 0x%04x\r\n", i,
+                    oldRegs[i], reg);
+        }
+        oldRegs[i] = reg;
+    }
+}
 
 void AT1846S_init()
 {
-    i2c_writeReg16(0x30, 0x0001);   /* Soft reset              */
+    // Preload map
+    for(uint8_t i = 0; i < 255; i++)
+    {
+        oldRegs[i] = i2c_readReg16(i);
+    }
+
+    _writeCheckRegisters(0x30, 0x0001);   /* Soft reset              */
+
+
     delayMs(100);
 
-    i2c_writeReg16(0x30, 0x0004);
+    _writeCheckRegisters(0x30, 0x0004);
 
-    i2c_writeReg16(0x04, 0x0FD0);
-    i2c_writeReg16(0x0A, 0x7C20);
-    i2c_writeReg16(0x13, 0xA100);
-    i2c_writeReg16(0x1F, 0x1001);
-    i2c_writeReg16(0x31, 0x0031);
-    i2c_writeReg16(0x33, 0x44A5);
-    i2c_writeReg16(0x34, 0x2B89);
-    i2c_writeReg16(0x41, 0x4122);
-    i2c_writeReg16(0x42, 0x1052);
-    i2c_writeReg16(0x43, 0x0100);
-    i2c_writeReg16(0x44, 0x07FF);
-    i2c_writeReg16(0x59, 0x0B90);
-    i2c_writeReg16(0x47, 0x7F2F);
-    i2c_writeReg16(0x4F, 0x2C62);
-    i2c_writeReg16(0x53, 0x0094);
-    i2c_writeReg16(0x54, 0x2A3C);
-    i2c_writeReg16(0x55, 0x0081);
-    i2c_writeReg16(0x56, 0x0B02);
-    i2c_writeReg16(0x57, 0x1C00);
-    i2c_writeReg16(0x58, 0x9CDD);
-    i2c_writeReg16(0x5A, 0x06DB);
-    i2c_writeReg16(0x63, 0x16AD);
-    i2c_writeReg16(0x67, 0x0628);
-    i2c_writeReg16(0x68, 0x05E5);
-    i2c_writeReg16(0x69, 0x0555);
-    i2c_writeReg16(0x6A, 0x04B8);
-    i2c_writeReg16(0x6B, 0x02FE);
-    i2c_writeReg16(0x6C, 0x01DD);
-    i2c_writeReg16(0x6D, 0x00B1);
-    i2c_writeReg16(0x6E, 0x0F82);
-    i2c_writeReg16(0x6F, 0x017A);
-    i2c_writeReg16(0x70, 0x004C);
-    i2c_writeReg16(0x71, 0x0F1D);
-    i2c_writeReg16(0x72, 0x0D91);
-    i2c_writeReg16(0x73, 0x0A3E);
-    i2c_writeReg16(0x74, 0x090F);
-    i2c_writeReg16(0x75, 0x0833);
-    i2c_writeReg16(0x76, 0x0806);
 
-    i2c_writeReg16(0x30, 0x40A4);
+    _writeCheckRegisters(0x04, 0x0FD0);
+
+    _writeCheckRegisters(0x0A, 0x7C20);
+
+    _writeCheckRegisters(0x13, 0xA100);
+
+    _writeCheckRegisters(0x1F, 0x1001);
+
+    _writeCheckRegisters(0x31, 0x0031);
+
+    _writeCheckRegisters(0x33, 0x44A5);
+
+    _writeCheckRegisters(0x34, 0x2B89);
+
+    _writeCheckRegisters(0x41, 0x4122);
+
+    _writeCheckRegisters(0x42, 0x1052);
+
+    _writeCheckRegisters(0x43, 0x0100);
+
+    _writeCheckRegisters(0x44, 0x07FF);
+
+    _writeCheckRegisters(0x59, 0x0B90);
+
+    _writeCheckRegisters(0x47, 0x7F2F);
+
+    _writeCheckRegisters(0x4F, 0x2C62);
+
+    _writeCheckRegisters(0x53, 0x0094);
+
+    _writeCheckRegisters(0x54, 0x2A3C);
+
+    _writeCheckRegisters(0x55, 0x0081);
+
+    _writeCheckRegisters(0x56, 0x0B02);
+
+    _writeCheckRegisters(0x57, 0x1C00);
+
+    _writeCheckRegisters(0x58, 0x9CDD);
+
+    _writeCheckRegisters(0x5A, 0x06DB);
+
+    _writeCheckRegisters(0x63, 0x16AD);
+
+    _writeCheckRegisters(0x67, 0x0628);
+
+    _writeCheckRegisters(0x68, 0x05E5);
+
+    _writeCheckRegisters(0x69, 0x0555);
+
+    _writeCheckRegisters(0x6A, 0x04B8);
+
+    _writeCheckRegisters(0x6B, 0x02FE);
+
+    _writeCheckRegisters(0x6C, 0x01DD);
+
+    _writeCheckRegisters(0x6D, 0x00B1);
+
+    _writeCheckRegisters(0x6E, 0x0F82);
+
+    _writeCheckRegisters(0x6F, 0x017A);
+
+    _writeCheckRegisters(0x70, 0x004C);
+
+    _writeCheckRegisters(0x71, 0x0F1D);
+
+    _writeCheckRegisters(0x72, 0x0D91);
+
+    _writeCheckRegisters(0x73, 0x0A3E);
+
+    _writeCheckRegisters(0x74, 0x090F);
+
+    _writeCheckRegisters(0x75, 0x0833);
+
+    _writeCheckRegisters(0x76, 0x0806);
+
+
+    _writeCheckRegisters(0x30, 0x40A4);
+
     delayMs(100);
 
-    i2c_writeReg16(0x30, 0x40A6);   /* Start calibration       */
+    _writeCheckRegisters(0x30, 0x40A6);   /* Start calibration       */
+
     delayMs(100);
-    i2c_writeReg16(0x30, 0x4006);   /* Stop calibration        */
+    _writeCheckRegisters(0x30, 0x4006);   /* Stop calibration        */
+
     delayMs(100);
 
-    i2c_writeReg16(0x40, 0x0031);
+    _writeCheckRegisters(0x40, 0x0031);
+
 }
 
 void AT1846S_terminate()
