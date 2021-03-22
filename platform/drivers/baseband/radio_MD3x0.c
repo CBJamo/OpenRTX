@@ -197,7 +197,7 @@ void radio_setCSS(const tone_t rxCss, const tone_t txCss)
 {
     (void) rxCss;
     float tone = ((float) txCss) / 10.0f;
-    toneGen_setToneFreq(tone);
+//     toneGen_setToneFreq(tone);
 }
 
 bool radio_checkRxDigitalSquelch()
@@ -239,7 +239,7 @@ void radio_enableTx(const float txPower, const bool enableCss)
 
     if(enableCss)
     {
-        toneGen_toneOn();
+//         toneGen_toneOn();
     }
 }
 
@@ -248,7 +248,7 @@ void radio_disableRtx()
     /* If we are currently transmitting, stop tone and C5000 TX */
     if(gpio_readPin(TX_STG_EN) == 1)
     {
-        toneGen_toneOff();
+//         toneGen_toneOff();
         C5000_stopAnalogTx();
     }
 

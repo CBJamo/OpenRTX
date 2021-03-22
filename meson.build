@@ -27,11 +27,13 @@ openrtx_src = ['openrtx/src/state.c',
 
 
 ## Replace main executable with platform test
-if get_option('test') != ''
-  openrtx_src += 'tests/platform/'+get_option('test')+'.c'
-else
-  openrtx_src += 'openrtx/src/main.c'
-endif
+# if get_option('test') != ''
+#   openrtx_src += 'tests/platform/'+get_option('test')+'.c'
+# else
+#   openrtx_src += 'openrtx/src/main.c'
+# endif
+
+openrtx_src += 'tests/platform/M17_mod.c'
 
 openrtx_inc = ['openrtx/include',
                'openrtx/include/calibration',
